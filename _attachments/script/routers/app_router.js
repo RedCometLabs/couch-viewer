@@ -2,6 +2,7 @@ app.Routers.AppRouter = Backbone.Router.extend({
 
   routes: {
     "db/:name": "view_db",
+    "db/:name/:ddoc/:id": "view_db_view",
     "db/:name/*id": "view_doc",
     "*page": "home"
   },
@@ -30,6 +31,12 @@ app.Routers.AppRouter = Backbone.Router.extend({
     app.current_view.render();
     this.append_to_content();
 
+  },
+
+  view_db_view: function (name, ddoc, view) {
+    this.clean_up();
+    app.current_view = new app.Views.DbViews({db_name: name,ddoc: ddoc, view: view});
+    this.append_to_content();
   },
 
   clean_up: function() {
