@@ -4,7 +4,7 @@ window.app.Views.DatabaseView = Backbone.View.extend({
     this.db_name = options.db_name;
 
     if (!this.collection) {
-      this.collection = new app.Collections.Databases({db_name: this.db_name});
+      this.collection = new app.Collections.Documents({db_name: this.db_name});
     }
 
     this.collection.on('reset', this.collection_updated);

@@ -7,6 +7,9 @@ app.Views.DbViews = Backbone.View.extend({
     this.ddoc = options.ddoc;
     this.view = options.view;
 
+    if(!this.collection) {
+      this.collection = new app.Collections.Documents({db_name: this.db_name});
+    }
   },
 
   events: {
@@ -21,34 +24,45 @@ app.Views.DbViews = Backbone.View.extend({
 
     event.preventDefault();
 
-    this.$('.vinput').each(function (index, item) {
+    this.$('input[data-query-type="text"]').each(function (index, item) {
       var value = $(this).val(),
           id = $(this).attr('id');
 
-      if (value) {
+      if (!value) { return }
+
+      if (value[0] == '"' || value[0] == '[' || value[0] == '{') {
         params[id] = value;
+      } else {
+        params[id] = JSON.stringify(value);
       }
 
+    });
+
+    this.$('input[data-query-type="number"]').each(function (index, item) {
+      var value = $(this).val(),
+          id = $(this).attr('id')
+
+      if (!value) { return }
+
+      params[id] = value;
     });
 
     this.$('input:checked').each(function (index, item) {
       var id = $(this).attr('id');
       params[id] = true;
     });
+
+    console.log("PARAMS");
     console.log(params);
-  
-    var promise = $.getJSON('/' + this.db_name + '/_design/' + this.ddoc + '/_view/' + this.view, params);
-    promise.done(function (items) {
-      console.log(items);
-      self.view_results.render_with_results(items);
-    });
+    this.collection.fetch_from_view(this.ddoc, this.view, params);
   },
 
   render: function () {
     this.$el.html(ich.ViewTemplate());
+    this.db_views = new app.Views.DbViewsListerView({el: this.$el.find("#view-list"), db_name: this.db_name});
 
     if (!this.view_results) {
-      this.view_results = new app.Views.ViewResults({el: this.$el.find('#view-results')});
+      this.view_results = new app.Views.ViewResults({db_name: this.db_name, el: this.$el.find('#view-results'), collection: this.collection});
       this.query_view({preventDefault: function(){}});
     }
 
@@ -57,4 +71,3 @@ app.Views.DbViews = Backbone.View.extend({
 
 });
 
-//view_url ='/'+ encodeURIComponent(db) + '/_design/' + ddoc + '/_view/' + view + "?reduce=false&" + q_values.join('&');

@@ -68,9 +68,9 @@
   <script src="script/jsoneditor.js"> </script>
   <script src="script/app.js"> </script>
   <script src="script/models/view.js"> </script>
-  <script src="script/models/database.js"> </script>
+  <script src="script/models/document.js"> </script>
   <script src="script/collections/views.js"> </script>
-  <script src="script/collections/databases.js"> </script>
+  <script src="script/collections/documents.js"> </script>
   <script src="script/views/databases.js"> </script>
   <script src="script/views/database.js"> </script>
   <script src="script/views/document.js"> </script>
@@ -89,34 +89,42 @@
   <div class="row">
     <div class="span12 well" >
       <form class="form" id="view-query-form">
-        <legend>View Query Options</legend>
+      <div class="row">
+        <div class="span6">
+        <h3>View Query Options </h3> 
+      </div>
+      <div class="span6">
+        <div id="view-list"> </div>  
+      </div>
+        </div>
+        <legend> </legend>
         <div class="span3" >
         <label>Key</label>
-        <input id="key" class="vinput type="text" placeholder="Key">
+        <input id="key" data-query-type="text" type="text" placeholder="Key">
         </div>
         <div class="span3" >
         <label>Limit</label>
-        <input id="limit" class="vinput" type="number" placeholder="Limit" value="100">
+        <input id="limit" data-query-type="number" type="number" placeholder="Limit" value="100">
         </div>
         <div class="span5" >
         <label>Skip</label>
-        <input id="skip" class="vinput" type="number" placeholder="Skip">
+        <input id="skip" data-query-type="number" type="number" placeholder="Skip">
         </div>
         <div class="span3" >
         <label>Start Key</label>
-        <input id="startkey" class="vinput" type="text" placeholder="StartKey">
+        <input id="startkey" data-query-type="text" type="text" placeholder="StartKey">
         </div>
         <div class="span6" >
         <label>End Key</label>
-        <input id="endkey" class="vinput" type="text" placeholder="EndKey">
+        <input id="endkey" data-query-type="text" type="text" placeholder="EndKey">
         </div>
         <div class="span3" >
         <label>startkey_docid</label>
-        <input id="startkey_docid" class="vinput" type="text" placeholder="startkey_docid">
+        <input id="startkey_docid" data-query-type="text" type="text" placeholder="startkey_docid">
         </div>
         <div class="span3" >
         <label>endkey_docid</label>
-        <input id="endkey_docid" class="vinput" type="text" placeholder="endkey_docid">
+        <input id="endkey_docid" data-query-type="text" type="text" placeholder="endkey_docid">
         </div>
         <div class="span12" >
         <label class="checkbox inline">
@@ -155,13 +163,13 @@
           {{key}}
           <br />
           <small>
-          <a href="#db/{{name}}/{{id}}" class="small"> {{id}} </a>
+          <a href="#db/{{db_name}}/{{id}}" class="small"> {{id}} </a>
         </small>
         </td>
         <td> <code> {{value}} </code> </td>
         {{#doc}}
           <td class="expand-doc"> <i class="icon-chevron-up"></i> </td>
-          <tr class="js-show-doc" style="display:none"><td colspan="3"><code>{{doc}} </code></td></tr>
+          <tr class="js-show-doc" style="display:none"><td colspan="3" style="max-width:800px"><code>{{doc}} </code></td></tr>
         {{/doc}}
       </tr>
       {{/results}}

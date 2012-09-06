@@ -1,8 +1,11 @@
 app.Views.ViewResults = Backbone.View.extend({
 
   initialize: function (options) {
+    _.bindAll(this);
     this.results = options.results || [];
+    this.db_name = options.db_name;
     
+    this.collection.on('reset', this.render);    
   },
 
   events: {
@@ -28,18 +31,8 @@ app.Views.ViewResults = Backbone.View.extend({
 
 
   render: function () {
-    this.$el.html(ich.ViewResultsTemplate({results: this.results}));
-
+    this.$el.html(ich.ViewResultsTemplate({db_name: this.db_name, results: this.collection.toJSON()}));
   },
-
-  render_with_results: function (results) {
-    this.results = _.map(results.rows, function (item) {
-      return {id: item.id, key: JSON.stringify(item.key), value: JSON.stringify(item.value), doc: JSON.stringify(item.doc)}
-    });
-
-    this.render();
-   
-  }
 
 });
 

@@ -11,7 +11,6 @@ app.Collections.Views = Backbone.Collection.extend({
     var promise = $.getJSON('/' + this.db_name + '/_all_docs', {startkey:'"_design/"', endkey: '"_design0"', include_docs: true});
 
     promise.done(function (response) {
-      console.log("fetch");
       var views = _.map(response.rows, function (item) { return item.doc });
       var view_names = _.map(views, function (view) { 
         return {
