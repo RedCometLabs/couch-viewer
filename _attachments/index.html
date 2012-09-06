@@ -134,7 +134,7 @@
           <input id="inclusive_end" type="checkbox"> Inclusive End
         </label>
         <label class="checkbox inline">
-          <input id="decending" type="checkbox"> Decending
+          <input id="descending" type="checkbox"> Decending
         </label>
       </div>
         <div class="span12" >
@@ -206,7 +206,22 @@
   </ul>
 </script>
 <script id="DocumentTemplate" type="text/html">
-  <div id="editor"> </div>
+  <div class="row marginize">
+    <div class="span6">
+      <a id="save-doc" href="#" class="btn btn-info"> Save </a>
+      
+     </div>
+    <div class="span2 offset4">
+      <a id="delete-doc" href="#" class="btn btn-danger"> 
+        <i class="icon-trash"></i> Delete </a> 
+    </div>
+  </div>
+  <div class="row">
+    <div class="span12">
+      <div id="editor"> </div>
+     </div>
+  </div>
+
 </script>
 
 <script id="DatabaseTemplate" type="text/html">

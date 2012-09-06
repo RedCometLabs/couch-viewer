@@ -19,7 +19,7 @@ app.Routers.AppRouter = Backbone.Router.extend({
     console.log(name);
     console.log(id);
     this.clean_up();
-    app.current_view = new app.Views.DocumentView({db_name: name, document_id: id});
+    app.current_view = new app.Views.DocumentView({router: this, db_name: name, document_id: id});
     app.current_view.render();
     this.append_to_content();
   },
@@ -35,7 +35,7 @@ app.Routers.AppRouter = Backbone.Router.extend({
 
   view_db_view: function (name, ddoc, view) {
     this.clean_up();
-    app.current_view = new app.Views.DbViews({db_name: name,ddoc: ddoc, view: view});
+    app.current_view = new app.Views.DbViews({router: this, db_name: name,ddoc: ddoc, view: view});
     this.append_to_content();
   },
 

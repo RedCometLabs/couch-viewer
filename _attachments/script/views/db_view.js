@@ -3,6 +3,7 @@ app.Views.DbViews = Backbone.View.extend({
   initialize: function (options) {
     _.bindAll(this);
 
+    this.router = options.router;
     this.db_name = options.db_name;
     this.ddoc = options.ddoc;
     this.view = options.view;
@@ -52,8 +53,7 @@ app.Views.DbViews = Backbone.View.extend({
       params[id] = true;
     });
 
-    console.log("PARAMS");
-    console.log(params);
+    //this.router.navigate(Backbone.history.fragment + '?' + $.param(params));
     this.collection.fetch_from_view(this.ddoc, this.view, params);
   },
 
