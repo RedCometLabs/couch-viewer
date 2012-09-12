@@ -77,6 +77,7 @@
   <script src="script/views/breadcrumbs.js"> </script>
   <script src="script/views/db_views_lister.js"> </script>
   <script src="script/views/db_view.js"> </script>
+  <script src="script/views/logs.js"> </script>
   <script src="script/views/view_results.js"> </script>
   <script src="script/routers/app_router.js"> </script>
   <script type="text/javascript"> 
@@ -85,199 +86,231 @@
         });
 </script>
 <!-- templates used by app.js -->
-<script id="ViewTemplate" type="text/html">
-  <div class="row">
-    <div class="span12 well" >
-      <form class="form" id="view-query-form">
+<script id="LogsTemplate" type="text/html">
+  <h2> Couchdb Logs </h2>
+  <table class="table table-bordered" >
+  <thead>
+    <tr>
+      <th class="Date">Date</th>
+      <th class="Log Level">Log Value</th>
+      <th class="Pid">Pid</th>
+      <th class="Args">Url</th>
+    </tr>
+  </thead>
+
+  {{#logs}}
+  <tr class="{{log_level}}">
+    <td>
+      {{date}} 
+    </td>
+    <td>
+      {{log_level}} 
+    </td>
+    <td>
+      {{pid}} 
+    </td>
+    <td>
+      {{args}} 
+    </td>
+
+  </tr>
+  {{/logs}}
+</table>
+    </script>
+
+    <script id="ViewTemplate" type="text/html">
+      <div class="row">
+        <div class="span12 well" >
+          <form class="form" id="view-query-form">
+            <div class="row">
+              <div class="span6">
+                <h3>View Query Options </h3> 
+              </div>
+              <div class="span6">
+                <div id="view-list"> </div>  
+              </div>
+            </div>
+            <legend> </legend>
+            <div class="span3" >
+              <label>Key</label>
+              <input id="key" data-query-type="text" type="text" placeholder="Key">
+            </div>
+            <div class="span3" >
+              <label>Limit</label>
+              <input id="limit" data-query-type="number" type="number" placeholder="Limit" value="100">
+            </div>
+            <div class="span5" >
+              <label>Skip</label>
+              <input id="skip" data-query-type="number" type="number" placeholder="Skip">
+            </div>
+            <div class="span3" >
+              <label>Start Key</label>
+              <input id="startkey" data-query-type="text" type="text" placeholder="StartKey">
+            </div>
+            <div class="span6" >
+              <label>End Key</label>
+              <input id="endkey" data-query-type="text" type="text" placeholder="EndKey">
+            </div>
+            <div class="span3" >
+              <label>startkey_docid</label>
+              <input id="startkey_docid" data-query-type="text" type="text" placeholder="startkey_docid">
+            </div>
+            <div class="span3" >
+              <label>endkey_docid</label>
+              <input id="endkey_docid" data-query-type="text" type="text" placeholder="endkey_docid">
+            </div>
+            <div class="span12" >
+              <label class="checkbox inline">
+                <input id="include_docs" type="checkbox" checked="checked"> Include Docs
+              </label>
+              <label class="checkbox inline">
+                <input id="inclusive_end" type="checkbox"> Inclusive End
+              </label>
+              <label class="checkbox inline">
+                <input id="descending" type="checkbox"> Decending
+              </label>
+            </div>
+            <div class="span12" >
+              <button type="submit" class="btn">Query</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div id="view-results"> </div>
+
+    </script>
+    <script id="ViewResultsTemplate" type="text/html">
+      <div class="row">
+        <div class="span12">
+          <h2> View Results </h2>
+          <table class="table">
+            <thead>
+              <th> Key </th>
+              <th> Value </th>
+              <th> </th>
+            </thead>
+            <tbody>
+              {{#results}}
+              <tr>
+                <td>
+                  {{key}}
+                  <br />
+                  <small>
+                    <a href="#db/{{db_name}}/{{id}}" class="small"> {{id}} </a>
+                  </small>
+                </td>
+                <td> <code> {{value}} </code> </td>
+                {{#doc}}
+                <td class="expand-doc"> <i class="icon-chevron-up"></i> </td>
+                <tr class="js-show-doc" style="display:none"><td colspan="3" style="max-width:800px"><code>{{doc}} </code></td></tr>
+                {{/doc}}
+              </tr>
+              {{/results}}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </script>
+
+    <script id="ViewListTemplate" type="text/html">
+      <div class="btn-group" style="margin:18px">
+        <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+          Views
+          <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          {{#view_names}}
+          <li> {{name}} </li> 
+          {{#views}}
+          <li><a href="#db/{{db_name}}/{{ddoc}}/{{view}}">{{view}}</a></li>
+          {{/views}}
+          <li class="divider"></li>
+          {{/view_names}}
+        </ul>
+      </div>
+    </script>
+    <script id="BreadcrumbTemplate" type="text/html">
+      <ul class="breadcrumb">
+        {{#crumbs}}
+        {{#active}}<li class="active"> {{title}}</li>{{/active}}
+        {{^active}}<li><a href="#{{url}}">{{title}}</a> <span class="divider">/</span></li>{{/active}}
+        {{/crumbs}}
+      </ul>
+    </script>
+    <script id="DocumentTemplate" type="text/html">
+      <div class="row marginize">
+        <div class="span6">
+          <a id="save-doc" href="#" class="btn btn-info"> Save </a>
+
+        </div>
+        <div class="span2 offset4">
+          <a id="delete-doc" href="#" class="btn btn-danger"> 
+            <i class="icon-trash"></i> Delete </a> 
+        </div>
+      </div>
+      <div class="row">
+        <div class="span12">
+          <div id="editor"> </div>
+        </div>
+      </div>
+
+    </script>
+
+    <script id="DatabaseTemplate" type="text/html">
       <div class="row">
         <div class="span6">
-        <h3>View Query Options </h3> 
+          <h1> {{name}} </h1> 
+        </div>
+        <div id="view-list" class="span6">
+        </div>
       </div>
-      <div class="span6">
-        <div id="view-list"> </div>  
+      <div class="row">
+        <div class="span12">
+          <table class="table">
+            <thead>
+              <th> Key </th>
+              <th> Value </th>
+            </thead>
+            <tbody>
+              {{#docs}}
+              <tr>
+                <td><a href="#db/{{name}}/{{id}}">{{id}}</a> </td>
+                <td> {{value.rev}} </td>
+              </tr>
+              {{/docs}}
+            </tbody>
+          </table>
+        </div>
       </div>
-        </div>
-        <legend> </legend>
-        <div class="span3" >
-        <label>Key</label>
-        <input id="key" data-query-type="text" type="text" placeholder="Key">
-        </div>
-        <div class="span3" >
-        <label>Limit</label>
-        <input id="limit" data-query-type="number" type="number" placeholder="Limit" value="100">
-        </div>
-        <div class="span5" >
-        <label>Skip</label>
-        <input id="skip" data-query-type="number" type="number" placeholder="Skip">
-        </div>
-        <div class="span3" >
-        <label>Start Key</label>
-        <input id="startkey" data-query-type="text" type="text" placeholder="StartKey">
-        </div>
-        <div class="span6" >
-        <label>End Key</label>
-        <input id="endkey" data-query-type="text" type="text" placeholder="EndKey">
-        </div>
-        <div class="span3" >
-        <label>startkey_docid</label>
-        <input id="startkey_docid" data-query-type="text" type="text" placeholder="startkey_docid">
-        </div>
-        <div class="span3" >
-        <label>endkey_docid</label>
-        <input id="endkey_docid" data-query-type="text" type="text" placeholder="endkey_docid">
-        </div>
-        <div class="span12" >
-        <label class="checkbox inline">
-          <input id="include_docs" type="checkbox" checked="checked"> Include Docs
-        </label>
-        <label class="checkbox inline">
-          <input id="inclusive_end" type="checkbox"> Inclusive End
-        </label>
-        <label class="checkbox inline">
-          <input id="descending" type="checkbox"> Decending
-        </label>
-      </div>
-        <div class="span12" >
-        <button type="submit" class="btn">Query</button>
-      </div>
-      </form>
-    </div>
-  </div>
-  <div id="view-results"> </div>
+    </script>
 
-</script>
-<script id="ViewResultsTemplate" type="text/html">
-  <div class="row">
-    <div class="span12">
-      <h2> View Results </h2>
-  <table class="table">
-    <thead>
-    <th> Key </th>
-    <th> Value </th>
-    <th> </th>
-    </thead>
-    <tbody>
-      {{#results}}
-      <tr>
-        <td>
-          {{key}}
-          <br />
-          <small>
-          <a href="#db/{{db_name}}/{{id}}" class="small"> {{id}} </a>
-        </small>
-        </td>
-        <td> <code> {{value}} </code> </td>
-        {{#doc}}
-          <td class="expand-doc"> <i class="icon-chevron-up"></i> </td>
-          <tr class="js-show-doc" style="display:none"><td colspan="3" style="max-width:800px"><code>{{doc}} </code></td></tr>
-        {{/doc}}
-      </tr>
-      {{/results}}
-  </tbody>
-</table>
-</div>
-</div>
+    <script id="IndexTemplate" type="text/html">
+      <h1>Databases</h1>
+      <table class="table">
+        <thead>
+          <th> # </th>
+          <th> Database </th>
+          <th> Size </th>
+          <th> Number of documents</th>
+          <th> Update Sequence</th>
+        </thead>
+        <tbody>
+          {{#databases}}
+          <tr>
+            <td> {{num}} </td> 
+            <td> <a href="#db/{{name}}"> {{name}} </a> </td>
+            <td>{{size}} </td>
+            <td>{{num_docs}} </td>
+            <td>{{update_seq}}</td>
+          </tr>
+          {{/databases}}
+        </tbody>
 
-</script>
-
-<script id="ViewListTemplate" type="text/html">
-  <div class="btn-group" style="margin:18px">
-    <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
-    Views
-    <span class="caret"></span>
-  </a>
-    <ul class="dropdown-menu">
-      {{#view_names}}
-      <li> {{name}} </li> 
-        {{#views}}
-        <li><a href="#db/{{db_name}}/{{ddoc}}/{{view}}">{{view}}</a></li>
-        {{/views}}
-        <li class="divider"></li>
-      {{/view_names}}
-    </ul>
-  </div>
-</script>
-<script id="BreadcrumbTemplate" type="text/html">
-  <ul class="breadcrumb">
-    {{#crumbs}}
-    {{#active}}<li class="active"> {{title}}</li>{{/active}}
-    {{^active}}<li><a href="#{{url}}">{{title}}</a> <span class="divider">/</span></li>{{/active}}
-    {{/crumbs}}
-  </ul>
-</script>
-<script id="DocumentTemplate" type="text/html">
-  <div class="row marginize">
-    <div class="span6">
-      <a id="save-doc" href="#" class="btn btn-info"> Save </a>
-      
-     </div>
-    <div class="span2 offset4">
-      <a id="delete-doc" href="#" class="btn btn-danger"> 
-        <i class="icon-trash"></i> Delete </a> 
-    </div>
-  </div>
-  <div class="row">
-    <div class="span12">
-      <div id="editor"> </div>
-     </div>
-  </div>
-
-</script>
-
-<script id="DatabaseTemplate" type="text/html">
-  <div class="row">
-    <div class="span6">
-  <h1> {{name}} </h1> 
-</div>
-<div id="view-list" class="span6">
-</div>
-  </div>
-  <div class="row">
-    <div class="span12">
-  <table class="table">
-    <thead>
-    <th> Key </th>
-      <th> Value </th>
-    </thead>
-    <tbody>
-      {{#docs}}
-      <tr>
-        <td><a href="#db/{{name}}/{{id}}">{{id}}</a> </td>
-        <td> {{value.rev}} </td>
-      </tr>
-      {{/docs}}
-  </tbody>
-</table>
-</div>
-</div>
-</script>
-
- <script id="IndexTemplate" type="text/html">
-        <h1>Databases</h1>
-        <table class="table">
-          <thead>
-            <th> # </th>
-            <th> Database </th>
-            <th> Size </th>
-            <th> Number of documents</th>
-            <th> Update Sequence</th>
-          </thead>
-          <tbody>
-            {{#databases}}
-            <tr>
-              <td> {{num}} </td> 
-              <td> <a href="#db/{{name}}"> {{name}} </a> </td>
-              <td>{{size}} </td>
-              <td>{{num_docs}} </td>
-              <td>{{update_seq}}</td>
-            </tr>
-            {{/databases}}
-          </tbody>
-
-        </table>
-      </script>
+      </table>
+    </script>
 
 
-</body>
+  </body>
 
-    </html>
+</html>

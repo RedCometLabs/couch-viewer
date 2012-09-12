@@ -4,6 +4,7 @@ app.Routers.AppRouter = Backbone.Router.extend({
     "db/:name": "view_db",
     "db/:name/:ddoc/:id": "view_db_view",
     "db/:name/*id": "view_doc",
+    "logs": "view_logs", 
     "*page": "home"
   },
 
@@ -15,9 +16,14 @@ app.Routers.AppRouter = Backbone.Router.extend({
     this.append_to_content();
   },
 
+  view_logs: function () {
+    this.clean_up();
+    app.current_view = new app.Views.LogsView();
+    console.log(app.current_view);
+    this.append_to_content();
+  },
+
   view_doc: function (name, id) {
-    console.log(name);
-    console.log(id);
     this.clean_up();
     app.current_view = new app.Views.DocumentView({router: this, db_name: name, document_id: id});
     app.current_view.render();
