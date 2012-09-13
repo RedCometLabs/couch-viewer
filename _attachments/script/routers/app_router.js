@@ -5,6 +5,7 @@ app.Routers.AppRouter = Backbone.Router.extend({
     "db/:name/:ddoc/:id": "view_db_view",
     "db/:name/*id": "view_doc",
     "logs": "view_logs", 
+    "status": "view_status",
     "*page": "home"
   },
 
