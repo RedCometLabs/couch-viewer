@@ -3,41 +3,27 @@ module.exports = function(grunt) {
 
   // Project configuration.
   grunt.initConfig({
-    lint: {
-      files: ['grunt.js', 'lib/**/*.js', 'test/**/*.js']
-    },
-    test: {
-      files: ['test/**/*.js']
-    },
     watch: {
-      //files: '<config:lint.files>',
-      //tasks: 'lint test'
-      tasks: 'deploy'
-    },
-    deploy: {
+             //files: '<config:lint.files>',
+             //tasks: 'lint test'
+           },
 
-    },
+    less: {
+      development: {
+        options: {
+         // paths: ["assets/css"]
+        },
 
-    jshint: {
-      options: {
-        curly: true,
-        eqeqeq: true,
-        immed: true,
-        latedef: true,
-        newcap: true,
-        noarg: true,
-        sub: true,
-        undef: true,
-        boss: true,
-        eqnull: true
-      },
-      globals: {
-        jQuery: true
-      }
+        files: {
+             "_attachments/style/bootstrap.css": "_attachments/style/less/bootstrap.less"
+           }
+     },
     }
   });
 
+  grunt.loadNpmTasks('grunt-contrib-less');
+
   // Default task.
-  grunt.registerTask('default', 'watch');
+  grunt.registerTask('default', 'less');
 
 };
