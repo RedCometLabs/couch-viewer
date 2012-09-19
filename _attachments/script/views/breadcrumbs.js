@@ -9,6 +9,7 @@ window.app.Views.BreadcrumbView = Backbone.View.extend({
     this.router.on('route:view_db_view', this.db_view_crumbs);
     this.router.on('route:view_logs', this.logs);    
     this.router.on('route:view_status', this.status);    
+    this.router.on('route:view_changes', this.changes);    
   },
 
   home_crumbs: function () {
@@ -30,6 +31,12 @@ window.app.Views.BreadcrumbView = Backbone.View.extend({
 
   db_view_crumbs: function (name, ddoc, view) {
     this.crumbs = [this.create_dbs_crumb(false),  this.create_db_crumb(name, false), {active: true, title: view}]
+    this.render();
+
+  },
+
+  changes: function (name) {
+    this.crumbs = [this.create_dbs_crumb(false),  this.create_db_crumb(name, false), {active: true, title: "_changes"}]
     this.render();
 
   },

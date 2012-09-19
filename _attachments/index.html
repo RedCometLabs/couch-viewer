@@ -60,11 +60,14 @@
   <script src="script/app.js"> </script>
   <script src="script/models/view.js"> </script>
   <script src="script/models/document.js"> </script>
+  <script src="script/models/change.js"> </script>
   <script src="script/collections/views.js"> </script>
   <script src="script/collections/documents.js"> </script>
+  <script src="script/collections/changes.js"> </script>
   <script src="script/views/databases.js"> </script>
   <script src="script/views/database.js"> </script>
   <script src="script/views/document.js"> </script>
+  <script src="script/views/changes.js"> </script>
   <script src="script/views/breadcrumbs.js"> </script>
   <script src="script/views/db_views_lister.js"> </script>
   <script src="script/views/db_view.js"> </script>
@@ -77,6 +80,27 @@
         });
 </script>
 <!-- templates used by app.js -->
+<script id="ChangesTemplate" type="text/html">
+  <h2> {{db_name}} changes </h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th> Seq </th>
+        <th> Id </th>
+        <th> Changes </th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#changes}}
+        <tr>
+          <td> {{seq}} </td>
+          <td> {{id}} </td>
+          <td> {{changes}} </td>
+        </tr>
+      {{/changes}}
+    </tbody>
+  </table>
+ </scripts>
 <script id="LogsTemplate" type="text/html">
   <h2> Couchdb Logs </h2>
   <table class="table table-bordered" >
@@ -253,7 +277,10 @@
         <div class="span6">
           <h1> {{name}} </h1> 
         </div>
-        <div id="view-list" class="span6">
+        <div class="span3 center-btn">
+          <a href="#db/{{name}}/_changes" class="btn btn-info"> Changes </a>
+        </div>
+        <div id="view-list" class="span3">
         </div>
       </div>
       <div class="row">
