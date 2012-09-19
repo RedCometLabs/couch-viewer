@@ -19,7 +19,7 @@ module.exports = function(grunt) {
     watch: {
              //files: '<config:lint.files>',
              //tasks: 'lint test'
-             files: ['*.less', '*.js'],
+             files: ['*.html', '*.less', '*.js'],
              tasks: 'less yowzer'
            },
 
