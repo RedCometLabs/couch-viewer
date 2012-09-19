@@ -19,7 +19,7 @@ module.exports = function(grunt) {
     watch: {
              //files: '<config:lint.files>',
              //tasks: 'lint test'
-             files: ['*.html', '*.less', '*.js'],
+             files: ['**/*.html', '**/*.less', '**/*.js'],
              tasks: 'less yowzer'
            },
 
@@ -30,7 +30,7 @@ module.exports = function(grunt) {
                                   },
 
                          files: {
-                          "_attachments/style/bootstrap.css": "_attachments/style/less/bootstrap.less"
+                          "_attachments/style/main.css": "_attachments/style/main.less"
                           }
                       },
           },
