@@ -1,0 +1,25 @@
+{
+  "name": "Yowzer",
+  "version": "0.0.1",
+  "description": "A couchdb viewer to complement futon",
+  "main": "app.js",
+  "dependencies": {
+    "couchapp": "~0.9.1",
+    "grunt-contrib-less": "~0.2.2",
+    "grunt-couchapp": "~0.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RedCometLabs/couch-viewer.git"
+  },
+  "keywords": [
+    "Couchdb",
+    "futon"
+  ],
+  "author": "Garren Smith",
+  "license": "MIT"
+}
