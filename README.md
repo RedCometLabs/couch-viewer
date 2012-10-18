@@ -5,6 +5,10 @@ So I wrote *Yowzer* to add those features.
 
 ## Install
 
+    npm install -g grunt 
+    npm install
+    grunt
+
 By default running `grunt` will install Yowzer into your local Couchdb instance. Edit the grunt.js file and change the db path
 
 ## Development
